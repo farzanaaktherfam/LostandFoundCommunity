@@ -1,12 +1,16 @@
 package com.example.lostandfoundcommunity
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class LoginActivity : AppCompatActivity() {
+   lateinit var textV2 : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -15,6 +19,11 @@ class LoginActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        textV2 = findViewById<TextView>(R.id.textV2)
+
+        textV2.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
         }
     }
 }
