@@ -1,29 +1,51 @@
 package com.example.lostandfoundcommunity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.EditText
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
-class LoginActivity : AppCompatActivity() {
-   lateinit var textV2 : TextView
+class LoginActivity : AppCompatActivity(){
+lateinit var email : EditText
+    lateinit var pass : EditText
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_login)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        textV2 = findViewById<TextView>(R.id.textV2)
 
-        textV2.setOnClickListener {
-            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
-        }
+        email=findViewById<EditText>(R.id.loginEmailEditText)
+        pass=findViewById<EditText>(R.id.pass)
+
+    }
+
+    fun startFeed(view: View) {
+
+        var sEmail= email.text.toString()
+        var sPass= pass.text.toString()
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(sEmail,sPass)
+            .addOnSuccessListener { result ->
+                val uid = result. user!!.uid
+                val email = result.user!!.email
+
+                FirebaseDatabase.getInstance().getReference("users").child(uid)
+
+                    .get().addOnSuccessListener { snapshot ->
+                        val userName= snapshot.getValue (String::class.java)
+                        val intent = Intent(this@LoginActivity, FeedActivity::class.java)
+                        intent.putExtra("Id",uid)
+                        intent.putExtra("Email",email)
+                        intent.putExtra("Username",userName)
+
+                        startActivity(intent)
+
+                    }
+
+            }
     }
 }

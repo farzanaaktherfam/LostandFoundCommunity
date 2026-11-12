@@ -38,7 +38,7 @@ class RegisterActivity : AppCompatActivity() {
         Login = findViewById<TextView>(R.id.Login)
 
 
-''
+
     }
 
     fun startFeed(view: View) {
@@ -78,7 +78,7 @@ val sConfirm = confirm.text.toString()
                             val uid = result.user!!.uid
                             FirebaseDatabase.getInstance().getReference("users")
                                 .child(uid).setValue(sUser)
-                            startActivity(Intent(this@RegisterActivity, FeedActivity::class.java))
+                            startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
                         finish()
                     }.addOnFailureListener {
                             Toast.makeText(this@RegisterActivity,
