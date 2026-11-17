@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/createPost"
+            android:title="Create Post" />
+
+        <item
+            android:id="@+id/yourPosts"
+            android:title="Your Posts" />
+
+        <item
+            android:id="@+id/resetPassword"
+            android:title="Reset Password" />
+
+        <item
+            android:id="@+id/logout"
+            android:title="Logout" />
+
+    </group>
+
+</menu>
