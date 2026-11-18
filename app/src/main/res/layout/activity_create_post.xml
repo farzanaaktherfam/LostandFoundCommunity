@@ -57,6 +57,14 @@
             android:padding="12dp"
             android:background="@android:drawable/edit_text"
             android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/captionCounter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0/1024"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"/>
 
         <Button
             android:id="@+id/uploadPostButton"

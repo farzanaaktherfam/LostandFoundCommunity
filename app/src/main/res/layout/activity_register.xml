@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:layout_marginTop="50dp"
-            android:hint="Your Name"
+            android:hint="Username"
             android:inputType="text" />
 
         <EditText

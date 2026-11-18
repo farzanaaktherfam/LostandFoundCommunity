@@ -1,8 +1,8 @@
-
 package com.example.lostandfoundcommunity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.EditText
 import android.widget.Button
 import android.widget.TextView
@@ -22,6 +22,14 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // আগে থেকে সাইন-ইন থাকলে সরাসরি Feed-এ যাও
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            startActivity(Intent(this@LoginActivity, FeedActivity::class.java))
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
 
@@ -53,6 +61,13 @@ class LoginActivity : AppCompatActivity() {
         if (sEmail.isEmpty() || sPass.isEmpty()) {
             Toast.makeText(this@LoginActivity,
                 "Please enter email and password.",
+                Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(sEmail).matches()) {
+            Toast.makeText(this@LoginActivity,
+                "Enter a valid email address.",
                 Toast.LENGTH_SHORT).show()
             return
         }
