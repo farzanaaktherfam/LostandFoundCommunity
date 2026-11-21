@@ -1,4 +1,6 @@
+
 package com.example.lostandfoundcommunity
+
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
@@ -31,39 +33,43 @@ class FeedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
 
-        // Initialize views
         drawerLayout = findViewById(R.id.main)
         menuButton = findViewById(R.id.menuButton)
         navigationView = findViewById(R.id.navigationView)
         searchView = findViewById(R.id.searchView)
         recyclerView = findViewById(R.id.recyclerView)
 
-        // Menu Button Click
+        // Open Navigation Drawer
         menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        // Feed list
+        // RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = FeedAdapter(shownPosts)
         recyclerView.adapter = adapter
 
         // Search
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-            override fun onQueryTextChange(newText: String?): Boolean {
-                applyFilter()
-                return true
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    applyFilter()
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    applyFilter()
+                    return true
+                }
             }
-        })
+        )
 
-        // Load User Information
+        // Load Data
         loadUserInfo()
-
-        // Load posts
         loadPosts()
 
-        // Navigation Menu Click
+        // Navigation Menu
         navigationView.setNavigationItemSelectedListener { item ->
 
             when (item.itemId) {
@@ -75,24 +81,29 @@ class FeedActivity : AppCompatActivity() {
                 }
 
                 R.id.yourPosts -> {
-                    startActivity(Intent(this, YourPostsActivity::class.java))
+                    startActivity(
+                        Intent(this, YourPostsActivity::class.java)
+                    )
                 }
 
+
                 R.id.resetPassword -> {
-                    Toast.makeText(
-                        this,
-                        "Reset Password",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    startActivity(
+                        Intent(this, ResetPasswordActivity::class.java)
+                    )
                 }
+
 
                 R.id.logout -> {
                     FirebaseAuth.getInstance().signOut()
 
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags =
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        Intent.FLAG_ACTIVITY_NEW_TASK or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK
+
                     startActivity(intent)
+                    finish()
                 }
             }
 
@@ -100,31 +111,45 @@ class FeedActivity : AppCompatActivity() {
             true
         }
 
+        // Back Button
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START)
-                } else {
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
+                override fun handleOnBackPressed() {
+
+                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    } else {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                    }
                 }
             }
-        })
+        )
     }
 
-    // Load posts from Firebase (newest first)
+    // Load Posts from Firebase
     private fun loadPosts() {
-        FirebaseDatabase.getInstance().getReference("posts")
+
+        FirebaseDatabase.getInstance()
+            .getReference("posts")
             .addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
+
                     allPosts.clear()
+
                     for (child in snapshot.children) {
-                        val post = child.getValue(Post::class.java) ?: continue
-                        post.id = child.key ?: ""
-                        allPosts.add(post)
+
+                        val post = child.getValue(Post::class.java)
+
+                        if (post != null) {
+                            post.id = child.key ?: ""
+                            allPosts.add(post)
+                        }
                     }
+
                     allPosts.sortByDescending { it.timestamp }
                     applyFilter()
                 }
@@ -139,22 +164,33 @@ class FeedActivity : AppCompatActivity() {
             })
     }
 
-    // Search by username (capital/small letters same)
+    // Search Posts by Username
     private fun applyFilter() {
-        val q = searchView.query.toString().trim().lowercase()
+
+        val query = searchView.query.toString()
+            .trim()
+            .lowercase()
+
         shownPosts.clear()
-        if (q.isEmpty()) {
+
+        if (query.isEmpty()) {
             shownPosts.addAll(allPosts)
         } else {
-            shownPosts.addAll(allPosts.filter { it.username.lowercase().contains(q) })
+            shownPosts.addAll(
+                allPosts.filter {
+                    it.username.lowercase().contains(query)
+                }
+            )
         }
+
         adapter.notifyDataSetChanged()
     }
 
     // Load User Information
     private fun loadUserInfo() {
 
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val uid = currentUser?.uid
 
         if (uid == null) {
 
@@ -166,45 +202,59 @@ class FeedActivity : AppCompatActivity() {
 
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags =
-                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+
             startActivity(intent)
+            finish()
             return
         }
 
-        val database = FirebaseDatabase.getInstance()
+        val database = FirebaseDatabase.getInstance().reference
 
-        database.getReference("users")
+        // First check users/UID
+        database.child("users")
             .child(uid)
             .addListenerForSingleValueEvent(
                 object : ValueEventListener {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
 
-                        val header = navigationView.getHeaderView(0)
+                        if (snapshot.child("username").exists()) {
 
-                        val username = header.findViewById<TextView>(
-                            R.id.headerUsername
-                        )
+                            showUserInfo(snapshot, currentUser.email)
 
-                        val email = header.findViewById<TextView>(
-                            R.id.headerEmail
-                        )
+                        } else {
 
-                        username.text =
-                            snapshot.child("username")
-                                .getValue(String::class.java)
-                                ?: "Username"
+                            // If not found, check UID directly
+                            database.child(uid)
+                                .addListenerForSingleValueEvent(
+                                    object : ValueEventListener {
 
-                        email.text =
-                            snapshot.child("email")
-                                .getValue(String::class.java)
-                                ?: FirebaseAuth.getInstance()
-                                    .currentUser?.email
-                                        ?: "Email"
+                                        override fun onDataChange(
+                                            rootSnapshot: DataSnapshot
+                                        ) {
+                                            showUserInfo(
+                                                rootSnapshot,
+                                                currentUser.email
+                                            )
+                                        }
+
+                                        override fun onCancelled(
+                                            error: DatabaseError
+                                        ) {
+                                            Toast.makeText(
+                                                this@FeedActivity,
+                                                error.message,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                )
+                        }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-
                         Toast.makeText(
                             this@FeedActivity,
                             error.message,
@@ -213,5 +263,47 @@ class FeedActivity : AppCompatActivity() {
                     }
                 }
             )
+    }
+
+    // Show Username, Email and Profile Initial
+    private fun showUserInfo(
+        snapshot: DataSnapshot,
+        authEmail: String?
+    ) {
+
+        val header = navigationView.getHeaderView(0)
+
+        val initial = header.findViewById<TextView>(
+            R.id.headerInitial
+        )
+
+        val username = header.findViewById<TextView>(
+            R.id.headerUsername
+        )
+
+        val email = header.findViewById<TextView>(
+            R.id.headerEmail
+        )
+
+        val savedUsername =
+            snapshot.child("username")
+                .getValue(String::class.java)
+
+        val savedEmail =
+            snapshot.child("email")
+                .getValue(String::class.java)
+
+        if (!savedUsername.isNullOrBlank()) {
+
+            username.text = savedUsername
+            initial.text = savedUsername.first().uppercase()
+
+        } else {
+
+            username.text = "Name not found"
+            initial.text = "?"
+        }
+
+        email.text = savedEmail ?: authEmail ?: "Email not found"
     }
 }

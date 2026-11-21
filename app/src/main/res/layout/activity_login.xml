@@ -64,6 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_margin="15dp"
                 android:text="New Here?" />
 
             <TextView
@@ -71,6 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Create Account"
+                android:layout_margin="15dp"
                 android:layout_weight="1" />
 
         </LinearLayout>

@@ -38,6 +38,10 @@
         <activity
             android:name=".YourPostsActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

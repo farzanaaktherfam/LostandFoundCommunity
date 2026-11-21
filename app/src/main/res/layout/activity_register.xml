@@ -15,11 +15,22 @@
         android:gravity="center"
         android:padding="10dp">
 
+        <TextView
+            android:id="@+id/registerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Account"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_marginBottom="15dp" />
         <EditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:layout_margin="5dp"
             android:layout_marginTop="50dp"
             android:hint="Username"
             android:inputType="text" />
@@ -29,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:layout_margin="5dp"
             android:hint="Your Email"
             android:inputType="textEmailAddress" />
 
@@ -37,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:layout_margin="5dp"
             android:hint="Password"
             android:inputType="textPassword" />
 
@@ -45,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:layout_margin="5dp"
             android:hint="Confirm Password"
             android:inputType="textPassword" />
 
@@ -52,6 +66,7 @@
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:text="Register"
             android:backgroundTint="#3F51B5" />
 
@@ -65,6 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_margin="8dp"
                 android:text="Have an account?" />
 
             <TextView
@@ -72,6 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_margin="8dp"
                 android:text="Login"
                 android:onClick="loginUser" />
 

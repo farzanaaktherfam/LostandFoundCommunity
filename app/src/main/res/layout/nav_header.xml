@@ -9,13 +9,25 @@
     android:background="#DCE6FF">
 
     <TextView
+        android:id="@+id/headerInitial"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/profile_circle"
+        android:gravity="center"
+        android:text="U"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#3F51B5" />
+
+    <TextView
         android:id="@+id/headerUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#202124" />
+        android:textColor="#202124"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/headerEmail"
@@ -24,6 +36,6 @@
         android:text="user@email.com"
         android:textSize="13sp"
         android:textColor="#555555"
-        android:layout_marginTop="6dp" />
+        android:layout_marginTop="4dp" />
 
 </LinearLayout>

@@ -1,11 +1,12 @@
+
 package com.example.lostandfoundcommunity
 
 data class Post(
     var id: String = "",
-    val uid: String = "",
-    val username: String = "",
-    val caption: String = "",
-    val imageUrl: String = "",
-    val publicId: String = "",
-    val timestamp: Long = 0L
+    var uid: String = "",
+    var username: String = "",
+    var caption: String = "",
+    var imageUrl: String = "",
+    var publicId: String = "",
+    var timestamp: Long = 0L
 )
