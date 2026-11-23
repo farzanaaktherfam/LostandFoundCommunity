@@ -1,3 +1,4 @@
+
 package com.example.lostandfoundcommunity
 
 import android.view.LayoutInflater
@@ -51,7 +52,9 @@ class YourPostsAdapter(
         return PostViewHolder(view)
     }
 
-    override fun getItemCount(): Int = posts.size
+    override fun getItemCount(): Int {
+        return posts.size
+    }
 
     override fun onBindViewHolder(
         holder: PostViewHolder,
@@ -63,11 +66,10 @@ class YourPostsAdapter(
         holder.username.text = post.username
         holder.caption.text = post.caption
 
-        holder.date.text =
-            SimpleDateFormat(
-                "dd/MM/yyyy hh:mm:ss",
-                Locale.ENGLISH
-            ).format(Date(post.timestamp))
+        holder.date.text = SimpleDateFormat(
+            "dd/MM/yyyy hh:mm:ss",
+            Locale.ENGLISH
+        ).format(Date(post.timestamp))
 
         Glide.with(holder.image.context)
             .load(post.imageUrl)

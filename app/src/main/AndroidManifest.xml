@@ -42,6 +42,9 @@
         <activity
             android:name=".ResetPasswordActivity"
             android:exported="false" />
+        <activity
+            android:name=".EditPostActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
